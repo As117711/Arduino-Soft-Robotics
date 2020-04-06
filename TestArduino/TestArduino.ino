@@ -28,6 +28,12 @@ void setup() {
     digitalWrite(led3, LOW);
 
     Serial.begin(9600);
+    // Excel
+    Serial.println("CLEARDATA"); //clears up any data left from previous projects
+    //Serial.println("LABEL,Acolumn,Bcolumn,..."); //always write LABEL, so excel knows the next things will be the names of the columns (instead of Acolumn you could write Time for instance)
+    Serial.println("LABEL,Date,Time,FSR1,FSR2,millis");
+    Serial.println("RESETTIMER"); //resets timer to 0
+
 }
 
 void enginePwm(int pinNumber, float value)
@@ -91,6 +97,7 @@ void led(int value)
 
 
 void loop() {
+    Serial.print("DATA,TIME,TIMER,");
     float current = analogRead(A0);
     current = (current * 100) / 1024;
 
@@ -98,14 +105,16 @@ void loop() {
     fsr = (fsr * 100) / 1024;
     float fsr2 = analogRead(A2);
     fsr2 = (fsr2 * 100) / 1024;
-    
-    String msg = " FSR 1: ";
+
+    String msg = "";
     msg = msg + fsr;
-    msg = msg + " FSR 2:";
+    msg = msg + ",";
     msg = msg + fsr2;
+    msg = msg + ",";
 
     Serial.println(msg);
     led(fsr2);
     //enginePwm(6, fsr);
     //Serial.println(current);
+    delay(100);
 }
